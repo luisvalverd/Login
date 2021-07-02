@@ -19,6 +19,8 @@ const getUserByUsername = async (username) => {
 
 const insertUser = async (username, email, password) => {
 	await pool.query('INSERT INTO users(username, email, password) VALUES ($1, $2, $3)', [username, email, password]);
+	const dataUser = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+	return dataUser.rows[0];
 }
 
 const findUser = async (username, email) => {
@@ -29,5 +31,6 @@ const findUser = async (username, email) => {
 module.exports = {
 	getUserById,
 	insertUser,
-	getUserByUsername
+	getUserByUsername,
+	findUser
 }
