@@ -33,6 +33,23 @@ passport.use('register', new LocalStrategy ({
 	
 }));
 
+passport.use('login', new LocalStrategy({
+	usernameField: 'username',
+	passwordField: 'password',
+	passReqToCallback: true
+}, async (req, username, password, done) => {
+	const data = {
+		username: req.body.username,
+		password: req.body.password
+	}
+	const user = await db.getUserByUsername(data.username);
+	if (!user){
+		return done(null, false);
+	}
+	const compare = await encrypt.comparePassword(data.username, data.password);
+	return done(null, compare);
+}));
+
 passport.serializeUser((user, done) => {
 	done(null, user.id);
 });

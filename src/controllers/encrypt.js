@@ -23,8 +23,12 @@ const comparePassword = async (username, password) => {
 	const userCorrect = await new Promise(async (resolve, reject) => {
 		const findUser = await db.getUserByUsername(username);
 		bcrypt.compare(password, findUser[0].password, async (err, result) => {
-			const user = await db.getUserByUsername(username);
-			resolve(user[0]);
+			if (result){
+				const user = await db.getUserByUsername(username);
+				resolve(user[0]);
+			} else {
+				resolve(false);
+			}
 		});
 	});
 	return userCorrect;
